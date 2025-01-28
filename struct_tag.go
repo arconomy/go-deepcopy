@@ -30,6 +30,7 @@ func parseTag(detail *fieldDetail) {
 	tagValue, ok := detail.field.Tag.Lookup(defaultTagName)
 	detail.key = detail.field.Name
 	if !ok {
+		detail.ignored = !detail.field.IsExported()
 		return
 	}
 
@@ -45,5 +46,9 @@ func parseTag(detail *fieldDetail) {
 		if tagOpt == "required" && !detail.ignored {
 			detail.required = true
 		}
+	}
+
+	if !detail.required && !detail.field.IsExported() {
+		detail.ignored = true
 	}
 }
