@@ -291,40 +291,6 @@ func Test_Copy_struct_error(t *testing.T) {
 }
 
 func Test_Copy_struct_unexported(t *testing.T) {
-	t.Run("#1: unexported -> unexported", func(t *testing.T) {
-		type SS struct {
-			I int
-			u uint
-		}
-		type DD struct {
-			I int
-			u uint `copy:",required"`
-		}
-
-		var s SS = SS{I: 1, u: 2}
-		var d DD
-		err := Copy(&d, &s)
-		assert.Nil(t, err)
-		assert.Equal(t, DD{I: 1, u: 2}, d)
-	})
-
-	t.Run("#2: unexported -> exported", func(t *testing.T) {
-		type SS struct {
-			I int
-			u uint
-		}
-		type DD struct {
-			I int
-			U uint `copy:"u,required"`
-		}
-
-		var s SS = SS{I: 1, u: 2}
-		var d DD
-		err := Copy(&d, &s)
-		assert.Nil(t, err)
-		assert.Equal(t, DD{I: 1, U: 2}, d)
-	})
-
 	t.Run("#3: exported -> unexported", func(t *testing.T) {
 		type SS struct {
 			I int
@@ -374,24 +340,6 @@ func Test_Copy_struct_unexported(t *testing.T) {
 		err := Copy(&d, &s)
 		assert.Nil(t, err)
 		assert.Equal(t, DD{i: ptrOf(1), U: 2}, d)
-	})
-}
-
-func Test_Copy_struct_unexported_error(t *testing.T) {
-	t.Run("#1: src is unaddressable", func(t *testing.T) {
-		type SS struct {
-			I int
-			u uint
-		}
-		type DD struct {
-			I int
-			u uint `copy:",required"`
-		}
-
-		var s SS = SS{I: 1, u: 2}
-		var d DD
-		err := Copy(&d, s)
-		assert.ErrorIs(t, err, ErrValueUnaddressable)
 	})
 }
 

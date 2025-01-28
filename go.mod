@@ -1,4 +1,4 @@
-module github.com/tiendc/go-deepcopy
+module github.com/arconomy/go-deepcopy
 
 go 1.18
 
