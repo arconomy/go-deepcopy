@@ -19,6 +19,13 @@ type structCopier struct {
 
 // Copy implementation of Copy function for struct copier
 func (c *structCopier) Copy(dst, src reflect.Value) error {
+	copyMethod := src.MethodByName("Copy")
+	if copyMethod.IsValid() {
+		result := copyMethod.Call(nil)
+		if len(result) > 0 {
+			dst.Set(result[0])
+		}
+	}
 	for _, cp := range c.fieldCopiers {
 		if err := cp.Copy(dst, src); err != nil {
 			return err
