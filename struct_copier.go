@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+	"time"
 	"unsafe"
 )
 
@@ -25,6 +26,11 @@ func (c *structCopier) Copy(dst, src reflect.Value) error {
 		if len(result) > 0 {
 			dst.Set(result[0])
 		}
+	}
+	timeType := reflect.TypeOf(time.Time{})
+	if src.Type() == timeType && dst.Type() == timeType {
+		dst.Set(src)
+		return nil
 	}
 	for _, cp := range c.fieldCopiers {
 		if err := cp.Copy(dst, src); err != nil {
